@@ -2,37 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>EnergizeOS Client Document Portal</title>
+  <title>EnergizeOS Document Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
       max-width: 800px;
       margin: 50px auto;
       padding: 20px;
     }
     h1 {
-      color: #007ACC;
+      color: #00b0ff;
     }
     ul {
       padding: 0;
       list-style-type: none;
     }
     li {
-      margin: 10px 0;
+      margin: 12px 0;
     }
     a {
       text-decoration: none;
-      color: #0066cc;
+      color: #80d0ff;
     }
     a:hover {
       text-decoration: underline;
+    }
+    footer {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+      font-size: 0.85em;
+      color: #aaa;
+      text-align: left;
+    }
+    .social-icons {
+      margin-top: 8px;
+    }
+    .social-icons a {
+      margin-right: 15px;
+      color: #aaa;
+    }
+    .social-icons a:hover {
+      color: #00b0ff;
     }
   </style>
 </head>
 <body>
   <h1>📁 EnergizeOS Document Downloads</h1>
-  <p>Click to download the latest available files:</p>
+  <p>Click any item below to download the latest available files:</p>
   <ul id="file-list">Loading...</ul>
+
+  <footer>
+    <div>© 2025 Energize Solutions Inc. – All rights reserved.</div>
+    <div>Powered by GitHub Pages | Contact: <a href="mailto:info@energizeos.com">info@energizeos.com</a></div>
+    <div class="social-icons">
+      <a href="https://www.linkedin.com/in/gongtiejing" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin fa-lg"></i></a>
+      <a href="https://github.com/enxpower" target="_blank" aria-label="GitHub"><i class="fab fa-github fa-lg"></i></a>
+    </div>
+  </footer>
 
   <script>
     const FOLDER_ID = '1ykgBUtl8lldouo6yZtjnQfISVakwM3cB';
