@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EnergizeOS Client Document Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #007ACC;
+    }
+    ul {
+      padding: 0;
+      list-style-type: none;
+    }
+    li {
+      margin: 10px 0;
+    }
+    a {
+      text-decoration: none;
+      color: #0066cc;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>📁 EnergizeOS Document Downloads</h1>
+  <p>Click to download the latest available files:</p>
+  <ul id="file-list">Loading...</ul>
+
+  <script>
+    const FOLDER_ID = '1ykgBUtl8lldouo6yZtjnQfISVakwM3cB';
+    const API_KEY = 'AIzaSyCYWO2tmoIRNVwepHqGXY4cI5FM9MUJeHs';
+
+    fetch(`https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}&fields=files(id,name,mimeType)&pageSize=1000`)
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('file-list');
+        list.innerHTML = '';
+        if (!data.files || data.files.length === 0) {
+          list.innerHTML = '<li>No files found in the folder.</li>';
+          return;
+        }
+        data.files.forEach(file => {
+          const li = document.createElement('li');
+          const link = document.createElement('a');
+          link.textContent = `📄 ${file.name}`;
+          link.href = `https://drive.google.com/uc?export=download&id=${file.id}`;
+          link.target = '_blank';
+          li.appendChild(link);
+          list.appendChild(li);
+        });
+      })
+      .catch(err => {
+        document.getElementById('file-list').innerHTML = '<li>Error loading files. Please check the API key and folder access.</li>';
+        console.error('Drive API Error:', err);
+      });
+  </script>
+</body>
+</html>
