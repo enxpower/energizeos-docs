@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>EnergizeOS Document Portal</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,12 +16,18 @@
     h1 {
       color: #00b0ff;
     }
+    h2 {
+      margin-top: 40px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+      color: #00c3ff;
+    }
     ul {
-      padding: 0;
+      padding-left: 0;
       list-style-type: none;
     }
     li {
-      margin: 12px 0;
+      margin: 10px 0;
     }
     a {
       text-decoration: none;
@@ -52,8 +58,9 @@
 </head>
 <body>
   <h1>📁 EnergizeOS Document Downloads</h1>
-  <p>Click any item below to download the latest available files:</p>
-  <ul id="file-list">Loading...</ul>
+  <p>Click any item below to download:</p>
+
+  <div id="sections"></div>
 
   <footer>
     <div>© 2025 Energize Solutions Inc. – All rights reserved.</div>
@@ -68,28 +75,67 @@
     const FOLDER_ID = '1ykgBUtl8lldouo6yZtjnQfISVakwM3cB';
     const API_KEY = 'AIzaSyCYWO2tmoIRNVwepHqGXY4cI5FM9MUJeHs';
 
+    const categories = {
+      'Product Specs': ['spec', 'datasheet', 'technical'],
+      'Standard Contracts': ['contract', 'agreement', 'terms', 'msa'],
+      'Product Images': ['.png', '.jpg', '.jpeg', 'image', 'photo', 'picture'],
+      'Certifications': ['cert', 'ul', 'iec', 'en', 'compliance', 'certificate'],
+      'Other Files': [] // fallback category
+    };
+
+    const filesByCategory = {
+      'Product Specs': [],
+      'Standard Contracts': [],
+      'Product Images': [],
+      'Certifications': [],
+      'Other Files': []
+    };
+
     fetch(`https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}&fields=files(id,name,mimeType)&pageSize=1000`)
       .then(res => res.json())
       .then(data => {
-        const list = document.getElementById('file-list');
-        list.innerHTML = '';
         if (!data.files || data.files.length === 0) {
-          list.innerHTML = '<li>No files found in the folder.</li>';
+          document.getElementById('sections').innerHTML = '<p>No files found.</p>';
           return;
         }
+
         data.files.forEach(file => {
-          const li = document.createElement('li');
-          const link = document.createElement('a');
-          link.textContent = `📄 ${file.name}`;
-          link.href = `https://drive.google.com/uc?export=download&id=${file.id}`;
-          link.target = '_blank';
-          li.appendChild(link);
-          list.appendChild(li);
+          const fileName = file.name.toLowerCase();
+          let matched = false;
+          for (const category in categories) {
+            if (categories[category].some(keyword => fileName.includes(keyword))) {
+              filesByCategory[category].push(file);
+              matched = true;
+              break;
+            }
+          }
+          if (!matched) {
+            filesByCategory['Other Files'].push(file);
+          }
         });
+
+        const container = document.getElementById('sections');
+        for (const category in filesByCategory) {
+          if (filesByCategory[category].length === 0) continue;
+          const section = document.createElement('div');
+          section.innerHTML = `<h2>📂 ${category}</h2>`;
+          const ul = document.createElement('ul');
+          filesByCategory[category].forEach(file => {
+            const li = document.createElement('li');
+            const link = document.createElement('a');
+            link.textContent = `📄 ${file.name}`;
+            link.href = `https://drive.google.com/uc?export=download&id=${file.id}`;
+            link.target = '_blank';
+            li.appendChild(link);
+            ul.appendChild(li);
+          });
+          section.appendChild(ul);
+          container.appendChild(section);
+        }
       })
       .catch(err => {
-        document.getElementById('file-list').innerHTML = '<li>Error loading files. Please check the API key and folder access.</li>';
-        console.error('Drive API Error:', err);
+        document.getElementById('sections').innerHTML = '<p>Error loading files.</p>';
+        console.error(err);
       });
   </script>
 </body>
